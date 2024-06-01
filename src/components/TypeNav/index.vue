@@ -1697,7 +1697,7 @@ export default {
     //组件挂载完毕就可以向服务器发数据
     mounted(){
         //通知Vuex发送请求，获取数据，存在仓库中
-        this.$store.dispatch('categoryList')
+        this.$store.dispatch('home/categoryList')
     }
 }
 </script>
