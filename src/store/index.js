@@ -25,8 +25,11 @@ const actions={
 const getters={};
 //对外暴露Store类的一个实例
 export default new Vuex.Store({
-        home,
-        search,
-        login,
-        register
+        modules:{
+                home,
+                search,
+                login,
+                register     
+        }
+        
 })

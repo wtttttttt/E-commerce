@@ -29,10 +29,9 @@ const getters={};
 //对外暴露小仓库的一个实例
 export default ({
         namespaced: true,
-        modules:{
             state,
             mutations,
             actions,
             getters
-        }
+        
 })
