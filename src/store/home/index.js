@@ -2,13 +2,13 @@ import {reqCategoryList} from '@/api';
 //home模块的小仓库
 //state:仓库存储数据的地方
 const state={
-    //数据是根据接口返回值类型决定的
+    //数据初始值是根据接口返回值类型决定的
     categoryList:[]
 };
 //mutations:修改state的唯一手段
 const mutations={
-    CATEGORIES(){
-
+    CATEGORIES(state,categoryList){
+        state.categoryList=categoryList
     }
 };
 //actions:处理action，可以书写自己的业务逻辑，也可以处理异步，这里可以书写业务逻辑但不能修改state
@@ -17,7 +17,11 @@ const actions={
     async categoryList({ commit }) {
         try {
           const result = await reqCategoryList()
-          commit('CATEGORIES', result.data)
+          //console.log(result);
+          if(result.code==200){
+            commit('CATEGORIES', result.data)
+          }
+          
         } catch (error) {
           console.error('请求失败', error)
         }
@@ -28,7 +32,7 @@ const actions={
 const getters={};
 //对外暴露小仓库的一个实例
 export default ({
-        namespaced: true,
+       
             state,
             mutations,
             actions,

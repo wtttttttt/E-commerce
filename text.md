@@ -100,3 +100,29 @@ vuex主要包括state,mutations，actions,getters,modules
 如果项目过大，组件过多，接口也很多，数据也很多
 需要将store拆分为小仓库
 
+18.完成三级联动数据获取
+（1）鼠标移进完成一级数据背景色添加：
+--采用样式完成：item:hover{background-color:skyblue}
+--采用js:给标签动态添加class
+（2）鼠标移除背景色消失：
+--事件委派：将移除事件交给父元素，只有鼠标移除父元素时背景色才消失
+
+19.通过js控制二三级分类展示
+最初为通过css实现的：
+--最初二三级样式为display:none，当鼠标移到一级分类上去的时候，把display变为block
+&:hover {
+.item-list {
+display: block;
+ }
+ }
+ 用js实现：
+ --动态改变display属性:style="{display:currentIndex==index?'block':'none'}"
+
+卡顿现象：
+正常情况，用户慢慢进入，非正情况：用户行为很快，导致浏览器来不及解析全部代码，有可能出现卡顿现象
+解决：
+--函数防抖与节流
+（1）防抖：前面的所有出发都会呗取消，最后一次执行在规定的时间之后才能触发，也就是说如果连续快速的触发只会执行一次，比如输入框中输入文字，每输入一个字都发送一次请求就可能发生卡顿，
+--解决：lodash:_.debounce(function,time)
+（2）节流：在规定时间范围内不会重复触发回调，只有大于这个时间间隔才会触发回调，把频繁回调编程少量回调
+--解决：lodash:_.throttle(function,time)
