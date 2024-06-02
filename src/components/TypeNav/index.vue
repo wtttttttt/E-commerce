@@ -2,25 +2,27 @@
     <div class="type-nav">
             <div class="container">
                 <!-- 事件委派/事件代理 -->
-                <div @mouseleave="leaveIndex">
-                    <h2 class="all">全部商品分类</h2>
-                    <!-- 三级联动 -->
-                    <div class="sort">
-                    <div class="all-sort-list2">
+                <div @mouseleave="leaveIndex" @mouseenter="enterShow">
+                    
+                    <h2 class="all" >全部商品分类</h2>
+                    <!-- 三级联动  利用事件委派和编程式路由导航完成路由跳转 //过渡动画-->
+                    <transition name="sort"></transition>
+                    <div class="sort" v-show="show">
+                    <div class="all-sort-list2" @click="goSearch">
                         <div class="item" v-for="(c1,index) in categoryList" :key="c1.categoryId" :class="{cur:currentIndex==index}">
                             <h3 @mouseenter="changeIndex(index)">
-                                <a href="">{{c1.categoryName}}-{{index}}</a>
+                                <a :data-categoryName="c1.categoryName" :data-category1Id="c1.categoryId">{{c1.categoryName}}-{{index}}</a>
                             </h3>
                             <!-- 二级、三级分类 -->
                             <div class="item-list clearfix"  :style="{display:currentIndex==index?'block':'none'}">
                                 <div class="subitem" v-for="(c2) in c1.categoryChild" :key="c2.categoryId">
                                     <dl class="fore">
                                         <dt>
-                                            <a href="">{{c2.categoryName}}</a>
+                                            <a :data-categoryName="c2.categoryName" :data-category2Id="c2.categoryId">{{c2.categoryName}}</a>
                                         </dt>
                                         <dd>
                                             <em v-for="(c3) in c2.categoryChild" :key="c3.categoryId">
-                                                <a href="">{{c3.categoryName}}</a>
+                                                <a :data-categoryName="c3.categoryName" :data-category3Id="c3.categoryId">{{c3.categoryName}}</a>
                                             </em>
                                         </dd>
                                     </dl>
@@ -46,31 +48,87 @@
 </template>
 <script>
 import {mapState} from 'vuex'
+//这是引入了lodash的全部功能
+//import _ from 'lodash'
+//按需引入
+import throttle from 'lodash/throttle'
 export default {
     name:'TypeNav',
+    
     data(){
         return{
            //存储用户鼠标在哪个一级分类上
-            currentIndex:-1
-        }
-        
+            currentIndex:-1,
+            show:true,
+        };
     },
     methods:{
         //鼠标进入哪个一级分类的索引值,改变该项的背景颜色
         //正常情况，用户缓慢进入，非正情况：用户行为很快，导致浏览器来不及解析全部代码，有可能出现卡顿现象
-        changeIndex(index){
-            //console.log(index);
-            this.currentIndex=index;            
-        },
+        // changeIndex(index){
+        //     //console.log(index);
+        //     this.currentIndex=index;            
+        // },
+        //此处不能用箭头函数
+        changeIndex:throttle(function(index){
+            this.currentIndex=index;
+        },50),
         //鼠标移除一级分类回调函数
         leaveIndex(){
-            this.currentIndex=-1;           
-        }
+            this.currentIndex=-1;
+            //如果是search路由才执行
+            if(this.$route.path!="/home"){
+                this.show=false; 
+            }                     
+        },
+        enterShow(){
+            this.show=true;
+        },
+        goSearch(event){
+            //问题1：由于用了事件委派，h3,dt,dl,em的事件全都委派给父节点，如何确定点击的时候一定是a标签
+            //--给a标签添加自定义属性:data-categoryName其余子节点没有，只要带有:data-categoryName属性的就是a标签
+            //问题2：即使能确定点击的是a标签，如何确定是哪一及a标签
+            //--
+            //获取到当前触发事件的节点，有可能是h3,dt,dl,em，a标签
+            let element=event.target;
+            //console.log(element.dataset);
+            let{categoryname,category1id,category2id,category3id}=element.dataset;
+            if(categoryname){
+                //整理路由跳转参数
+               
+                let location={name:"search"}
+                let query={categoryName:categoryname};
+                //一级分类、二级分类、三级分类标签
+                if(category1id){
+                    query.category1Id=category1id;
+                }else if(category2id){
+                    query.category2Id=category2id;
+                }else{
+                    query.category3Id=category3id;
+                }
+                //参数整理完毕，将参数整合
+                location.query=query;
+                //路由跳转
+                //判断：是否有params参数
+                if(this.$route.params){
+                    location.params = { ...this.$route.params, keyword: 'defaultKeyword' };
+                }else {
+                    location.params = { keyword: 'defaultKeyword' };
+                }
+                this.$router.push(location);
+                                                                    
+            }
+
+        },
+        
     },
-    //组件挂载完毕就可以向服务器发数据
-    mounted(){
-        //通知Vuex发送请求，获取数据，存在仓库中
-        this.$store.dispatch('categoryList')
+    //组件挂载完毕就可以向服务器发数据，转移到根组件发送了
+    mounted(){        
+        if(this.$route.path!='/home'){
+            this.show=false;
+            //console.log("typeNav挂载完毕");
+        }
+        
     },
     computed:{
         ...mapState({
@@ -201,6 +259,18 @@ export default {
                         background-color: skyblue;
                     }
                 }
+            }
+            //过渡动画样式
+            //过渡动画开始样式（进入）
+            .sort-enter{
+                height: 0px;
+            }
+            //过渡动画结束状态（进入）
+            .sort-enter-to{
+                height: 461px;
+            }
+            .sort-enter-active{
+                transition: all .5s liner;
             }
         }
     }

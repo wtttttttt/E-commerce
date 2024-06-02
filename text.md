@@ -51,7 +51,7 @@ a.为什么有这种错误？——push方法会返回一个promise，promise有
 
 10.路由传参相关：
 1）传递params参数是否可以结合path?
---不可以，必须使用name，path只能和query参数一起使用
+--不可以，必须使用name，path只能和query参数一起使用,name也可以使用query
 2）如何指定params参数可传可不传？
 如果在配置路由时定义了params参数的占位，但跳转时不传参数，跳转后路径会由问题，那么如何指定可以不传呢？——在配置路由时在占位符后加个问号？
 3）params参数可传可不传，但如果传递的是空串怎么办？
@@ -126,3 +126,16 @@ display: block;
 --解决：lodash:_.debounce(function,time)
 （2）节流：在规定时间范围内不会重复触发回调，只有大于这个时间间隔才会触发回调，把频繁回调编程少量回调
 --解决：lodash:_.throttle(function,time)
+
+20.完成三级联动的路由跳转
+整理参数：
+往哪跳：跳到Search组件
+
+21.开发search模块中三级联动Navtype的显示与隐藏
+--在typeNav中通过v-show控制
+
+22.过度动画：
+前提条件：元素务必要有v-if,v-show指令才可以进行过度动画
+
+23.优化：
+每次挂载TypeNav组件都会向服务器发请求，因此将发请求放在根组件的mounted中，可以保证只发一次请求。
