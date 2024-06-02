@@ -56,25 +56,28 @@ export default{
     methods:{
         //搜索按钮的回调函数：需要向search路由跳转
         goSearch() {
-            if (this.$route.path !== '/search') {
+            // if (this.$route.path != '/search') {
                 //路由传参：由首页向搜索跳转时传参
                 //第一种方式：字符串形式：param+query
                 // this.$router.push('/search/'+this.keyword+"?k="+this.keyword.toUpperCase());
                 //第二种方式：模板字符串
                 // this.$router.push(`/search/${this.keyword}?k=${this.keyword.toUpperCase()}`)
-                //第三种方式：对象的方法,如果用params参数且用对象，则必须给路由取名字               
-                let location={
-                    name:"search",
-                    params:{keyword:this.keyword||undefined}
-                    }
+                //第三种方式：对象的方法,如果用params参数且用对象，则必须给路由取名字                               
                 //如果有query参数
+                let location = {
+                        name:"search",
+                        params: {keyword: this.keyword || undefined}
+                    };
                 if(this.$route.query){
                     
                     location.query=this.$route.query;
                 }
-                this.$router.push(location)                   
+                this.$router.push(location); 
+
+
+                                  
             }  
-        }
+        // }
     }
 }
 </script>

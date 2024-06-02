@@ -95,7 +95,7 @@ export default {
             let{categoryname,category1id,category2id,category3id}=element.dataset;
             if(categoryname){
                 //整理路由跳转参数
-               
+               if(this.$route!='/search'){
                 let location={name:"search"}
                 let query={categoryName:categoryname};
                 //一级分类、二级分类、三级分类标签
@@ -107,16 +107,15 @@ export default {
                     query.category3Id=category3id;
                 }
                 //参数整理完毕，将参数整合
-                location.query=query;
+                
                 //路由跳转
                 //判断：是否有params参数
-                if(this.$route.params){
-                    location.params = { ...this.$route.params, keyword: 'defaultKeyword' };
-                }else {
-                    location.params = { keyword: 'defaultKeyword' };
+                if(this.$route.params){                    
+                    location.params = this.$route.params;
+                    location.query=query;
+                    this.$router.push(location);
                 }
-                this.$router.push(location);
-                                                                    
+               }                                                                                                  
             }
 
         },
