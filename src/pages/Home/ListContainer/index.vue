@@ -5,8 +5,8 @@
                     <!--banner轮播-->
                     <div class="swiper-container" id="mySwiper">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <img src="./images/banner1.jpg" />
+                            <div class="swiper-slide" v-for="(carousel) in bannerList" :key="carousel.id">
+                                <img :src="carousel.imgUrl" />
                             </div>
                         
                         </div>
@@ -102,17 +102,40 @@
 </template>
 <script>
 import { mapState } from 'vuex';
+import Swiper from 'swiper';
 export default {
     name: '',
     mounted(){
         //派发action:通知vuex发请求
         this.$store.dispatch('getBannerList');
-    },
+        //由于发ajax请求是异步的，数据还没回来，因此不能创建Swiper实例
+        setTimeout(()=>{
+            var mySwiper = new Swiper (document.querySelector('.swiper-container'), {   
+            loop: true, // 循环模式选项        
+            // 如果需要分页器
+            pagination: {
+            clickable:true,
+            el: '.swiper-pagination',
+            },       
+            // 如果需要前进后退按钮
+            navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+            },
+            
+            // 如果需要滚动条
+            scrollbar: {
+            el: '.swiper-scrollbar',
+            },
+            })
+        },2000)        
+        },
     computed:{
         ...mapState({
             bannerList: state => state.home.bannerList
         })
     },   
+
 }
 </script>
 <style scoped lang="less">

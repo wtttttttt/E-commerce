@@ -12,6 +12,8 @@ import router from '@/router';
 import store from '@/store';
 //引入mockServe.js
 import '@/mock/mockServe';
+//引入swiper
+import 'swiper/css/swiper.css';
 
 new Vue({
   render: h => h(App),
