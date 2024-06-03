@@ -131,7 +131,7 @@ export default {
     },
     computed:{
         ...mapState({
-            //右侧是个函数，当使用这个计算属性的时候，右侧函数会立即执行一次
+            //mapState中，右侧是个函数，当使用这个计算属性的时候，右侧函数会立即执行一次
             //会注入一个参数state，即为大仓库中的数据
             categoryList:(state)=>{
                 return state.home.categoryList

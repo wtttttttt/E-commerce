@@ -101,8 +101,18 @@
         </div>
 </template>
 <script>
+import { mapState } from 'vuex';
 export default {
-   name:'',
+    name: '',
+    mounted(){
+        //派发action:通知vuex发请求
+        this.$store.dispatch('getBannerList');
+    },
+    computed:{
+        ...mapState({
+            bannerList: state => state.home.bannerList
+        })
+    },   
 }
 </script>
 <style scoped lang="less">

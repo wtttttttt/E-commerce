@@ -142,3 +142,14 @@ display: block;
 
 23.优化：
 每次挂载TypeNav组件都会向服务器发请求，因此将发请求放在根组件的mounted中，可以保证只发一次请求。
+
+
+24.开发home首页中的ListContainer组件与Floor组件
+但是服务器只返回商品列表的数据，因此需要mock技术造一些数据
+--在src下创建mock文件夹
+--在mock文件夹中创建json文件
+--把mock需要的图片放在public文件夹下，public在打包的时候会原封不动的放在dist文件夹下
+--通过mock模拟数据
+--在入口文件main.js引入执行一次
+--获取数据，存入store仓库
+轮播图
