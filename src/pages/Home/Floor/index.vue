@@ -2,7 +2,7 @@
     <div class="floor">
             <div class="py-container">
                 <div class="title clearfix">
-                    <h3 class="fl">家用电器</h3>
+                    <h3 class="fl">{{list.name}}</h3>
                     <div class="fr">
                         <ul class="nav-tabs clearfix">
                             <li class="active">
@@ -34,22 +34,16 @@
                         <div class="floor-1">
                             <div class="blockgary">
                                 <ul class="jd-list">
-                                    <li>节能补贴</li>
-                                    <li>4K电视</li>
-                                    <li>空气净化器</li>
-                                    <li>IH电饭煲</li>
-                                    <li>滚筒洗衣机</li>
-                                    <li>电热水器</li>
+                                    <li v-for="(keyword,index) in list.keywords" :key="index">{{keyword}}</li>                                 
                                 </ul>
-                                <img src="./images/floor-1-1.png" />
+                                <img :src="list.imgUrl"/>
                             </div>
                             <div class="floorBanner">
-                                <div class="swiper-container" id="floor1Swiper">
+                                <div class="swiper-container" ref="cur">
                                     <div class="swiper-wrapper">
-                                        <div class="swiper-slide">
-                                            <img src="./images/floor-1-b01.png">
-                                        </div>
-                                       
+                                        <div class="swiper-slide" v-for="(carousel) in list.carouselList" :key="carousel.id">
+                                            <img :src="carousel.imgUrl">
+                                        </div>                                       
                                     </div>
                                     <!-- 如果需要分页器 -->
                                     <div class="swiper-pagination"></div>
@@ -87,8 +81,30 @@
         </div>
 </template>
 <script>
+import Swiper from 'swiper';
 export default{
-    name:'Floor'
+    name: 'Floor',
+    props: ['list'],
+    mounted(){
+        var mySwiper = new Swiper(this.$refs.cur, {
+            loop: true, // 循环模式选项        
+            // 如果需要分页器
+            pagination: {
+                clickable: true,
+                el: '.swiper-pagination',
+            },
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+
+            // 如果需要滚动条
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
+        })    
+    }
 }
 </script>
 <style scoped lang="less">

@@ -132,6 +132,7 @@ export default {
     computed:{
         ...mapState({
             //mapState中，右侧是个函数，当使用这个计算属性的时候，右侧函数会立即执行一次
+            //mapState 是 Vuex 中用于将 Vuex 状态映射到组件计算属性的一种方法
             //会注入一个参数state，即为大仓库中的数据
             categoryList:(state)=>{
                 return state.home.categoryList

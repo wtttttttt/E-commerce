@@ -3,7 +3,7 @@
             <div class="sortList clearfix">
                 <div class="center">
                     <!--banner轮播-->
-                    <div class="swiper-container" id="mySwiper">
+                    <div class="swiper-container" ref="mySwiper">
                         <div class="swiper-wrapper">
                             <div class="swiper-slide" v-for="(carousel) in bannerList" :key="carousel.id">
                                 <img :src="carousel.imgUrl" />
@@ -107,35 +107,67 @@ export default {
     name: '',
     mounted(){
         //派发action:通知vuex发请求
+        //console.log('我是mounted'); 
         this.$store.dispatch('getBannerList');
-        //由于发ajax请求是异步的，数据还没回来，因此不能创建Swiper实例
-        setTimeout(()=>{
-            var mySwiper = new Swiper (document.querySelector('.swiper-container'), {   
-            loop: true, // 循环模式选项        
-            // 如果需要分页器
-            pagination: {
-            clickable:true,
-            el: '.swiper-pagination',
-            },       
-            // 如果需要前进后退按钮
-            navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-            },
+        //由于发ajax请求是异步的，数据还没回来，因此不能创建Swiper实例，但用setTimeout不是最完美的解决方案
+        // setTimeout(()=>{
+        //     var mySwiper = new Swiper (document.querySelector('.swiper-container'), {   
+        //     loop: true, // 循环模式选项        
+        //     // 如果需要分页器
+        //     pagination: {
+        //     clickable:true,
+        //     el: '.swiper-pagination',
+        //     },       
+        //     // 如果需要前进后退按钮
+        //     navigation: {
+        //     nextEl: '.swiper-button-next',
+        //     prevEl: '.swiper-button-prev',
+        //     },
             
-            // 如果需要滚动条
-            scrollbar: {
-            el: '.swiper-scrollbar',
-            },
-            })
-        },2000)        
-        },
+        //     // 如果需要滚动条
+        //     scrollbar: {
+        //     el: '.swiper-scrollbar',
+        //     },
+        //     })
+        // },2000)        
+        //console.log('初始化swiper实例对象');  
+    },
     computed:{
         ...mapState({
             bannerList: state => state.home.bannerList
         })
     },   
-
+    watch: {
+        //监听bannerList的变化，有一个空数组变为从服务器返回的数据
+        bannerList: {
+            //如果handler执行了，代表数据发生了改变,但不能说明页面渲染完毕,因此要使用nextTick：
+            //nextTick:第一次v-for bannerList是个空数组，下次DOM更新时bannerList有数据了，v-for结束之后，执行nextTick中的回调。            
+            handler(newValue, oldValue) {
+                this.$nextTick(() => {
+                    //console.log(1111);
+                    var mySwiper = new Swiper (this.$refs.mySwiper, {   
+                        loop: true, // 循环模式选项        
+                        // 如果需要分页器
+                        pagination: {
+                        clickable:true,
+                        el: '.swiper-pagination',
+                        },       
+                        // 如果需要前进后退按钮
+                        navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                        },
+                        
+                        // 如果需要滚动条
+                        scrollbar: {
+                        el: '.swiper-scrollbar',
+                        },
+                    })
+                })
+                
+            }
+        }
+    }
 }
 </script>
 <style scoped lang="less">
