@@ -14,3 +14,19 @@ export const reqGetBannerList = () => {
 }
 //获取floor数据
 export const reqFloorList = () => mockRequests.get('/floor');
+
+//获取搜索模块数据：/api/list 方式：post
+//当前接口给服务器传递的参数至少是个空对象
+export const reqGetSearchInfo = (params) => request({url:"/list",method:"post",data:params})
+// {
+//   "category3Id": "61",
+//   "categoryName": "手机",
+//   "keyword": "小米",
+//   "order": "1:desc",
+//   "pageNo": 1,
+//   "pageSize": 10,
+//   "props": ["1:1700-2799:价格", "2:6.65-6.74英寸:屏幕尺寸"],
+//   "trademark": "4:小米"
+// }
+
+

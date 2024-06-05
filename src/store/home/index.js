@@ -23,7 +23,7 @@ const mutations={
     },
     GETFLOORLIST(state, floorList) {
       state.floorList = floorList;
-      console.log(state.floorList);
+      //console.log(state.floorList);
     }
 };
 //actions:处理action，可以书写自己的业务逻辑，也可以处理异步，这里可以书写业务逻辑但不能修改state
@@ -40,22 +40,22 @@ const actions={
         } catch (error) {
           console.error('请求失败', error)
         }
-  },
-  async getBannerList({ commit }) {
+    },
+    async getBannerList({ commit }) {
       //console.log('获取服务器数据');
       let result = await reqGetBannerList();
       //console.log(result);
       if (result.code === 200) {
         commit('GETBANNERLIST', result.data);
       }
-  },
-  async getFloorList({ commit }) {
+    },
+    async getFloorList({ commit }) {
       let result = await reqFloorList();
       //console.log(result);
       if (result.code === 200) {
         commit('GETFLOORLIST', result.data);
       }
-  }
+    }
     
 };
 //getters:可以理解为计算属性，用于简化仓库数据，让组件获取仓库的数据更加方便

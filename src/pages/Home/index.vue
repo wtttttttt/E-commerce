@@ -33,7 +33,7 @@ export default{
         //通知服务器发请求
         this.$store.dispatch('getFloorList');
         setTimeout(()=>{
-            console.log(this.floorList);
+            //console.log(this.floorList);
         },5000) 
     },
     computed: {

@@ -2,21 +2,8 @@
     <div class="list-container">
             <div class="sortList clearfix">
                 <div class="center">
-                    <!--banner轮播-->
-                    <div class="swiper-container" ref="mySwiper">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide" v-for="(carousel) in bannerList" :key="carousel.id">
-                                <img :src="carousel.imgUrl" />
-                            </div>
-                        
-                        </div>
-                        <!-- 如果需要分页器 -->
-                        <div class="swiper-pagination"></div>
-
-                        <!-- 如果需要导航按钮 -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
+                    <!--banner轮播-->                   
+                    <Carousel :list="bannerList"></Carousel>
                 </div>
                 <div class="right">
                     <div class="news">
@@ -140,12 +127,13 @@ export default {
     watch: {
         //监听bannerList的变化，有一个空数组变为从服务器返回的数据
         bannerList: {
+            immediate:true,
             //如果handler执行了，代表数据发生了改变,但不能说明页面渲染完毕,因此要使用nextTick：
             //nextTick:第一次v-for bannerList是个空数组，下次DOM更新时bannerList有数据了，v-for结束之后，执行nextTick中的回调。            
             handler(newValue, oldValue) {
                 this.$nextTick(() => {
                     //console.log(1111);
-                    var mySwiper = new Swiper (this.$refs.mySwiper, {   
+                    var mySwiper = new Swiper (this.$refs.cur, {   
                         loop: true, // 循环模式选项        
                         // 如果需要分页器
                         pagination: {
