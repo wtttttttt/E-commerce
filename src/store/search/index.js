@@ -6,7 +6,9 @@ const state = {
 };
 //mutations:修改state的唯一手段
 const mutations = {
-  GETSEARCHLIST(state, searchList) {},
+  GETSEARCHLIST(state, searchList) {
+    state.searchList = searchList;
+  },
 };
 //actions:处理action，可以书写自己的业务逻辑，也可以处理异步，这里可以书写业务逻辑但不能修改state
 const actions = {
@@ -26,9 +28,15 @@ const actions = {
 //getters:可以理解为计算属性，用于简化仓库数据，让组件获取仓库的数据更加方便
 const getters = {
   //当前形参state，是当前仓库中的状态
-  goodList(state) {
-    return state.searchList.goodList;
+  goodsList(state) {
+    return state.searchList.goodsList;
   },
+  trademarkList(state){
+    return state.searchList.trademarkList;
+  },
+  attrsList(state){
+    return state.searchList.attrsList;
+  }
 };
 //对外暴露小仓库的一个实例
 export default {

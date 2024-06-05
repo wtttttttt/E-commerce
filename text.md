@@ -157,15 +157,3 @@ npm install引包和css样式、务必在完成页面元素加载后，创建swi
 由于向服务器发请求是异步的，因此在ListContainer中要等待数据回来才能创建swiper实例，一种方法是使用定时器解决
 另一种是使用watch+$nextTick:第一次v-for bannerList是个空数组，下次DOM更新时bannerList有数据了，v-for结束之后，执行nextTick中的回调。
 nextTick可以保证页面中元素一定是有的
-
-25.开发floor组件：
-切记：仓库中的state数据格式，floorList中的数据是两个对象，因此不能在floor组件中派发action发请求，因为home中有两个floor组件需要分别展示两个对象
-因此需要在父组件home中派发
-
-26.把首页中的轮播图封装成一个公用组件，在入口文件注册
-
-27.search模块开发
-(1)静态页面+静态组件
-(2)发请求
-(3)vux三连环
-(4)组件获取仓库数据，动态展示数据
