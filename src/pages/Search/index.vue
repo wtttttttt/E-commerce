@@ -34,28 +34,18 @@
         <!--selector-->
         <!-- 给子组件绑定自定义事件 -->
         <SearchSelector @tradeMarkInfo="tradeMarkInfo" @attrInfo="attrInfo" />
-        <!--details-->
+        <!--排序-->
         <div class="details clearfix">
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li class="active">
-                  <a href="#">综合</a>
+                <li :class="{ active: isOne }">
+                  <a href="#">综合<span v-show="isOne" class='iconfont'
+                      :class="{ 'icon-up1': isAcs, 'icon-DOWN': isDesc }"></span></a>
                 </li>
-                <li>
-                  <a href="#">销量</a>
-                </li>
-                <li>
-                  <a href="#">新品</a>
-                </li>
-                <li>
-                  <a href="#">评价</a>
-                </li>
-                <li>
-                  <a href="#">价格⬆</a>
-                </li>
-                <li>
-                  <a href="#">价格⬇</a>
+                <li :class="{ active: isTwo }">
+                  <a href="#">价格<span v-show="isTwo" class='iconfont'
+                      :class="{ 'icon-up1': isAcs, 'icon-DOWN': isDesc }"></span></a>
                 </li>
               </ul>
             </div>
@@ -140,7 +130,7 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "",
+        order: "2:desc",//排序 1，2：asc,desc
         pageNo: 1,
         pageSize: 10,//每页展示数组的数据
         props: [],//平台售卖属性待的参数
@@ -231,7 +221,19 @@ export default {
     //这里不用mapstate用getters
     //getters:简化仓库中的数据
     //mapGetters传递的是数组，因为getters没有划分模块
-    ...mapGetters(['goodsList', 'trademarkList', 'attrsList'])
+    ...mapGetters(['goodsList', 'trademarkList', 'attrsList']),
+    isOne() {
+      return this.searchParams.order.indexOf('1') !== -1;
+    },
+    isTwo() {
+      return this.searchParams.order.indexOf('2') !== -1;
+    },
+    isAcs() {
+      return this.searchParams.order.includes("asc");
+    },
+    isDesc() {
+      return this.searchParams.order.includes("desc");
+    },
   },
   watch: {
     //监听路由的变化，一旦发生变化，重新向服务器发请求
