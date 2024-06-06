@@ -29,14 +29,14 @@ const actions = {
 const getters = {
   //当前形参state，是当前仓库中的状态
   goodsList(state) {
-    return state.searchList.goodsList;
+    return state.searchList.goodsList || [];
   },
-  trademarkList(state){
-    return state.searchList.trademarkList;
+  trademarkList(state) {
+    return state.searchList.trademarkList || [];
   },
-  attrsList(state){
-    return state.searchList.attrsList;
-  }
+  attrsList(state) {
+    return state.searchList.attrsList || [];
+  },
 };
 //对外暴露小仓库的一个实例
 export default {

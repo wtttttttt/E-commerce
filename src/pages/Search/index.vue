@@ -12,16 +12,28 @@
             </li>
           </ul>
           <ul class="fl sui-tag">
-            <li class="with-x">手机</li>
-            <li class="with-x">iphone<i>×</i></li>
-            <li class="with-x">华为<i>×</i></li>
-            <li class="with-x">OPPO<i>×</i></li>
+            <!-- 分类的面包屑 -->
+            <li class="with-x" v-if="searchParams.categoryName">{{ searchParams.categoryName }}
+              <i @click="removeCategoryName">x</i>
+            </li>
+            <!-- 关键字的面包屑 -->
+            <li class="with-x" v-if="searchParams.keyword">{{ searchParams.keyword }}
+              <i @click="removeKeyword">x</i>
+            </li>
+            <!-- 品牌的面包屑 -->
+            <li class="with-x" v-if="searchParams.trademark">{{ searchParams.trademark.split(":")[1] }}
+              <i @click="removeTrademark">x</i>
+            </li>
+            <!-- 平台售卖属性值的面包屑 -->
+            <!-- 此处用到数组去重 -->
+            <li class="with-x" v-for="(prop, index) in searchParams.props" :key="index">{{ prop.split(":")[1] }}
+              <i @click="removeAttr(index)">x</i>
+            </li>
           </ul>
         </div>
-
         <!--selector-->
-        <SearchSelector />
-
+        <!-- 给子组件绑定自定义事件 -->
+        <SearchSelector @tradeMarkInfo="tradeMarkInfo" @attrInfo="attrInfo" />
         <!--details-->
         <div class="details clearfix">
           <div class="sui-navbar">
@@ -58,11 +70,12 @@
                   <div class="price">
                     <strong>
                       <em>¥</em>
-                      <i>{{good.price}}</i>
+                      <i>{{ good.price }}</i>
                     </strong>
                   </div>
                   <div class="attr">
-                    <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">{{good.title}}</a>
+                    <a target="_blank" href="item.html" title="促销信息，下单即赠送三个月CIBN视频会员卡！【小米电视新品4A 58 火爆预约中】">{{ good.title
+                      }}</a>
                   </div>
                   <div class="commit">
                     <i class="command">已有<span>2000</span>人评价</i>
@@ -111,6 +124,7 @@
 </template>
 
 <script>
+import { remove } from 'nprogress';
 import SearchSelector from './SearchSelector/SearchSelector';
 import { mapGetters } from 'vuex';
 export default {
@@ -118,9 +132,9 @@ export default {
   components: {
     SearchSelector
   },
-  data(){
-    return{
-      searchParams:{
+  data() {
+    return {
+      searchParams: {
         category1Id: "",
         category2Id: "",
         category3Id: "",
@@ -134,28 +148,80 @@ export default {
       }
     }
   },
-  methods:{
+  methods: {
     //根据不同参数向服务器发送post请求
-    getData(){
+    getData() {
       this.$store.dispatch('getSearchList', this.searchParams)
+    },
+    //删除query参数面包屑
+    removeCategoryName() {
+      //将带给服务器的数据置空,但是置空还是会发给服务器，因此要写成undefined，会自动丢弃
+      this.searchParams.categoryName = undefined;
+      this.searchParams.category1Id = undefined;
+      this.searchParams.category2Id = undefined;
+      this.searchParams.category3Id = undefined;
+      //地址栏也需要改：进行路由跳转,路由变化后会自动发请求，本意是删除query参数，但是要考虑到params参数
+      //如果路径中有params参数不应该删除,应该带着params参数重新发请求
+      if (this.$route.params) {
+        this.$router.push({ name: "search", params: this.$route.params });
+      }
+    },
+    //删除params参数面包屑（关键字keyword）
+    removeKeyword() {
+      //keyword置空
+      this.searchParams.keyword = undefined;
+      //重新发请求
+      this.getData();
+      //通知header清除关键字
+      this.$bus.$emit("clear");
+      //进行路由跳转
+      if (this.$route.query) {
+        this.$router.push({ name: "search", query: this.$route.query });
+      }
+    },
+    //删除品牌面包屑
+    removeTrademark() {
+      this.searchParams.trademark = undefined;
+      this.getData();
+    },
+    //删除平台售卖属性面包屑
+    removeAttr(index) {
+      //再次整理参数发请求
+      this.searchParams.props.splice(index, 1);
+      this.getData();
+    },
+    //接收从子组件传来的品牌信息
+    tradeMarkInfo(trademark) {
+      //console.log('我是父组件，我收到了trademark：', trademark);
+      //整理参数发请求
+      this.searchParams.trademark = `${trademark.tmId}:${trademark.tmName}`;
+      this.getData();
+    },
+    //接收从子组件传来的属性信息
+    attrInfo(attr, attrValue) {
+      //console.log(attr, attrValue);
+      //整理参数发请求
+      let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
+      //数组去重
+      if (this.searchParams.props.indexOf(props) == -1) this.searchParams.props.push(props);
+      this.getData();
     }
   },
-  //组件挂载完毕之前执行一次
-  beforeCreate(){
-    console.log(this.$route.query);
-    this.searchParams.category1Id = this.$route.query.category1Id;
-    this.searchParams.category2Id = this.$route.query.category2Id;
-    this.searchParams.category3Id = this.$route.query.category3Id;
-    this.searchParams.categoryName = this.$route.query.categoryName;
-    this.searchParams.keyword = this.$route.query.keyword;
-    this.searchParams.order = this.$route.query.order;
-    this.searchParams.pageNo = this.$route.query.pageNo;
-    this.searchParams.pageSize = this.$route.query.pageSize;
-    this.searchParams.props = this.$route.query.props;
-    this.searchParams.trademark = this.$route.query.trademark;
-  },
-  created(){
-
+  beforeMount() {
+    // console.log(this.$route.query);
+    // this.searchParams.category1Id = this.$route.query.category1Id;
+    // this.searchParams.category2Id = this.$route.query.category2Id;
+    // this.searchParams.category3Id = this.$route.query.category3Id;
+    // this.searchParams.categoryName = this.$route.query.categoryName;
+    // this.searchParams.keyword = this.$route.query.keyword;
+    // this.searchParams.order = this.$route.query.order;
+    // this.searchParams.pageNo = this.$route.query.pageNo;
+    // this.searchParams.pageSize = this.$route.query.pageSize;
+    // this.searchParams.props = this.$route.query.props;
+    // this.searchParams.trademark = this.$route.query.trademark;
+    //简单写法，给服务器发请求之前整理参数
+    Object.assign(this.searchParams, this.$route.query, this.$route.params)
+    //console.log(this.searchParams);
   },
   mounted() {
     //在发请求之前要给参数赋值
@@ -165,7 +231,22 @@ export default {
     //这里不用mapstate用getters
     //getters:简化仓库中的数据
     //mapGetters传递的是数组，因为getters没有划分模块
-    ...mapGetters(['goodsList'])
+    ...mapGetters(['goodsList', 'trademarkList', 'attrsList'])
+  },
+  watch: {
+    //监听路由的变化，一旦发生变化，重新向服务器发请求
+    $route: {
+      handler(newValue, oldValue) {
+        //发请求之前重新整理发给服务器的参数
+        Object.assign(this.searchParams, this.$route.query, this.$route.params);
+        //再次发起ajax请求
+        this.getData();
+        //请求完毕要置空相应的123id，以便接受下次请求的参数
+        this.searchParams.category1Id = "";
+        this.searchParams.category2Id = "";
+        this.searchParams.category3Id = "";
+      }
+    }
   }
 }
 </script>
