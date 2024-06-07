@@ -39,12 +39,12 @@
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
-                <li :class="{ active: isOne }">
+                <li :class="{ active: isOne }" @click="changeOrder('1')">
                   <a href="#">综合<span v-show="isOne" class='iconfont'
                       :class="{ 'icon-up1': isAcs, 'icon-DOWN': isDesc }"></span></a>
                 </li>
-                <li :class="{ active: isTwo }">
-                  <a href="#">价格<span v-show="isTwo" class='iconfont'
+                <li :class="{ active: isTwo }" @click="changeOrder('2')">
+                  <a href=" #">价格<span v-show="isTwo" class='iconfont'
                       :class="{ 'icon-up1': isAcs, 'icon-DOWN': isDesc }"></span></a>
                 </li>
               </ul>
@@ -130,7 +130,7 @@ export default {
         category3Id: "",
         categoryName: "",
         keyword: "",
-        order: "2:desc",//排序 1，2：asc,desc
+        order: "1:desc",//排序 1，2：asc,desc 默认综合降序
         pageNo: 1,
         pageSize: 10,//每页展示数组的数据
         props: [],//平台售卖属性待的参数
@@ -194,6 +194,23 @@ export default {
       let props = `${attr.attrId}:${attrValue}:${attr.attrName}`;
       //数组去重
       if (this.searchParams.props.indexOf(props) == -1) this.searchParams.props.push(props);
+      this.getData();
+    },
+    changeOrder(flag) {
+      //flag为1表示点击的是综合，2位价格，是点击的时候传进来的
+      let originOrder = this.searchParams.order;
+      let originFlag = originOrder.split(":")[0];
+      let originSort = originOrder.split(":")[1];
+      let newOrder = ''
+      //如果点击的是原来的，只需要将箭头取反
+      if (flag === originFlag) {
+        newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`
+      }
+      //如果点击的是另一个,默认降序
+      else {
+        newOrder = `${flag}:${"desc"}`;
+      }
+      this.searchParams.order = newOrder;
       this.getData();
     }
   },
