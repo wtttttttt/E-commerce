@@ -8,6 +8,9 @@ Vue.component(TypeNav.name, TypeNav);
 //轮播图注册为全剧组件
 import Carousel from "@/components/Carousel";
 Vue.component(Carousel.name, Carousel);
+//分页器注册为全局组件
+import Pagination from "@/components/Pagination";
+Vue.component(Pagination.name, Pagination);
 //引入路由
 import router from "@/router";
 //引入Vuex仓库

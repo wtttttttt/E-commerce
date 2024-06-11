@@ -55,7 +55,7 @@
               <li class="yui3-u-1-5" v-for="(good) in goodsList" :key="good.id">
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"><img :src="good.defaultImg" /></a>
+                    <router-link :to="`/detail/${good.id}`"><img :src="good.defaultImg" /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -78,35 +78,9 @@
               </li>
             </ul>
           </div>
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5"
+            @getPageNo="getPageNo">
+          </Pagination>
         </div>
       </div>
     </div>
@@ -116,7 +90,7 @@
 <script>
 import { remove } from 'nprogress';
 import SearchSelector from './SearchSelector/SearchSelector';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 export default {
   name: 'Search',
   components: {
@@ -132,7 +106,7 @@ export default {
         keyword: "",
         order: "1:desc",//排序 1，2：asc,desc 默认综合降序
         pageNo: 1,
-        pageSize: 10,//每页展示数组的数据
+        pageSize: 5,//每页展示数组的数据
         props: [],//平台售卖属性待的参数
         trademark: ""//品牌
       }
@@ -212,6 +186,13 @@ export default {
       }
       this.searchParams.order = newOrder;
       this.getData();
+    },
+    //点击分页的回调函数
+    getPageNo(pageNo) {
+      //这女管理参数
+      this.searchParams.pageNo = pageNo;
+      //发请求
+      this.getData();
     }
   },
   beforeMount() {
@@ -251,6 +232,10 @@ export default {
     isDesc() {
       return this.searchParams.order.includes("desc");
     },
+    //用mapstate获取total
+    ...mapState({
+      total: state => state.search.searchList.total,
+    })
   },
   watch: {
     //监听路由的变化，一旦发生变化，重新向服务器发请求
