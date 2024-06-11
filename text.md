@@ -174,3 +174,15 @@ pagenation 需要的数据：当前是第几页 pageNo，每一页展示多少�
 分为上中下三个部分：
 
 28.详情页
+当点击商品图片时。跳转到详情页并传参，（params 参数）
+路由跳转：此处用声明式导航就可以
+滚动行为
+请求接口数据：
+vuex 新增模块
+
+29.计算属性：
+//给子组件的数据
+skuImageList() {
+return this.skuInfo.skuImageList || [];
+}
+在模板中就不要再使用 skuInfo.skuImageList 了，直接使用 skuImageList

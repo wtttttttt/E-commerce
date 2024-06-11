@@ -14,7 +14,7 @@ const actions = {
     try {
       let result = await reqGoodsInfo(skuId);
       if (result.code == 200) {
-        console.log(result);
+        //console.log(result);
         commit("GETGOODSINFO", result.data);
       } else {
         console.error("API response error:", result);
@@ -28,12 +28,20 @@ const actions = {
 };
 
 const getters = {
+  //路径导航简化--面包屑
   categoryView(state) {
     //防止页面加载时服务器还没返回数据
     return state.goodInfo.categoryView || {};
   },
+  //产品信息数据简化
   skuInfo(state) {
     return state.goodInfo.skuInfo || {};
+  },
+  //产品售卖属性数据简化
+  skuSaleAttrValueList(state) {
+    return state.goodInfo.skuInfo
+      ? state.goodInfo.skuInfo.skuSaleAttrValueList
+      : [];
   },
 };
 export default {

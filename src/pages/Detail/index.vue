@@ -15,10 +15,10 @@
       <div class="mainCon">
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
-          <!--放大镜效果-->
-          <Zoom />
+          <!--放大镜效果 父给子传数据,但数据每回来的时候不能给undefined-->
+          <Zoom :skuImageList="skuImageList" />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList :skuImageList="skuImageList" />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
@@ -63,29 +63,11 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
+              <dl v-for="(skuSaleAttr) in skuSaleAttrValueList" :key="skuSaleAttr.id">
                 <dt class="title">选择颜色</dt>
                 <dd changepirce="0" class="active">金色</dd>
                 <dd changepirce="40">银色</dd>
                 <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
               </dl>
             </div>
             <div class="cartWrap">
@@ -346,7 +328,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 import ImageList from './ImageList/ImageList'
 import Zoom from './Zoom/Zoom'
 export default {
@@ -359,7 +341,11 @@ export default {
     this.$store.dispatch('getGoodsInfo', this.$route.params.skuId);
   },
   computed: {
-    ...mapGetters(['categoryView', 'skuInfo'])
+    ...mapGetters(['categoryView', 'skuInfo', 'skuSaleAttrValueList']),
+    //给子组件的数据
+    skuImageList() {
+      return this.skuInfo.skuImageList || [];
+    },
   }
 }
 </script>
