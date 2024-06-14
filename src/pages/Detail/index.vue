@@ -63,11 +63,11 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl v-for="(skuSaleAttr) in skuSaleAttrValueList" :key="skuSaleAttr.id">
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
+              <dl v-for="(spuSaleAttr) in spuSaleAttrList" :key="spuSaleAttr.id">
+                <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
+                <dd changepirce="0" :class="{ active: spuSaleAttrValue.isChecked == 1 }"
+                  v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id">{{
+                    spuSaleAttrValue.saleAttrValueName }}</dd>
               </dl>
             </div>
             <div class="cartWrap">
@@ -341,7 +341,7 @@ export default {
     this.$store.dispatch('getGoodsInfo', this.$route.params.skuId);
   },
   computed: {
-    ...mapGetters(['categoryView', 'skuInfo', 'skuSaleAttrValueList']),
+    ...mapGetters(['categoryView', 'skuInfo', 'spuSaleAttrList']),
     //给子组件的数据
     skuImageList() {
       return this.skuInfo.skuImageList || [];

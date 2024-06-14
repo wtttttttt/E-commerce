@@ -14,7 +14,7 @@ const actions = {
     try {
       let result = await reqGoodsInfo(skuId);
       if (result.code == 200) {
-        //console.log(result);
+        //console.log(result.data);
         commit("GETGOODSINFO", result.data);
       } else {
         console.error("API response error:", result);
@@ -38,10 +38,8 @@ const getters = {
     return state.goodInfo.skuInfo || {};
   },
   //产品售卖属性数据简化
-  skuSaleAttrValueList(state) {
-    return state.goodInfo.skuInfo
-      ? state.goodInfo.skuInfo.skuSaleAttrValueList
-      : [];
+  spuSaleAttrList(state) {
+    return state.goodInfo.spuSaleAttrList || [];
   },
 };
 export default {
