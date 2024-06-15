@@ -186,3 +186,5 @@ skuImageList() {
 return this.skuInfo.skuImageList || [];
 }
 在模板中就不要再使用 skuInfo.skuImageList 了，直接使用 skuImageList
+
+30

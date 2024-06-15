@@ -66,18 +66,19 @@
               <dl v-for="(spuSaleAttr) in spuSaleAttrList" :key="spuSaleAttr.id">
                 <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
                 <dd changepirce="0" :class="{ active: spuSaleAttrValue.isChecked == 1 }"
-                  v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id">{{
+                  v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id" @click="changeActive(spuSaleAttrValue,spuSaleAttr.spuSaleAttrValueList)">{{
                     spuSaleAttrValue.saleAttrValueName }}</dd>
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt">
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a href="javascript:" class="mins" @click="skuNum>1?skuNum--:skuNum=1">-</a>
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 加入购物车路由跳转之前发一次请求,将所加入购物车的产品发给服务器 -->
+                <a href="javascript:" @click="addShopCart">加入购物车</a>
               </div>
             </div>
           </div>
@@ -336,6 +337,39 @@ export default {
   components: {
     ImageList,
     Zoom
+  },
+  data() {
+    return {
+      //购买产品的个数
+      skuNum: 1,
+    }
+  },
+  methods:{
+    //传输组的原因是要把其他元素取消高亮
+    changeActive(spuSaleAttrValue,arr){
+      arr.forEach(item => {
+        item.isChecked=0;
+      });
+      spuSaleAttrValue.isChecked=1;
+    },
+    //修改加入购物车的
+    changeSkuNum(event) {
+      let value = event.target.value;
+      if (isNaN(value) || value < 1) {
+        console.log("非法输入");
+        this.skuNum = 1;
+      }
+      else this.skuNum = parseInt(value);
+    },
+    //加入购物车的回调
+    addShopCart() {
+      //派发action--给服务器发请求
+      //params参数是从search跳转时带来的
+      this.$store.dispatch('addOrUpdateShopCart', { skuId: this.$route.params.skuId, skuNum: this.skuNum });
+      //--成功进行路由跳转
+      //失败进行提示
+        
+    }
   },
   mounted() {
     this.$store.dispatch('getGoodsInfo', this.$route.params.skuId);

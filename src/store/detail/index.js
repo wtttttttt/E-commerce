@@ -1,6 +1,7 @@
 import { reqGoodsInfo } from "@/api";
 
 import { getPositioningCSS } from "nprogress";
+import { reqAddOrUpdateShopCart } from "@/api";
 const state = {
   goodInfo: {},
 };
@@ -25,6 +26,10 @@ const actions = {
       throw error;
     }
   },
+  async addOrUpdateShopCart({ commit }, { skuId, skuNum }) {
+    let result = await reqAddOrUpdateShopCart(skuId, skuNum);
+    //此处服务器没有返回数据,因此不用存储
+  }
 };
 
 const getters = {

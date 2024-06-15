@@ -1,11 +1,12 @@
 <template>
   <div class="spec-preview">
     <img :src="imgObj.imgUrl" />
-    <div class="event"></div>
-    <div class="big">
+    <div class="event" @mousemove="handler"></div>
+    <div class="big" ref="big">
       <img :src="imgObj.imgUrl" />
     </div>
-    <div class="mask"></div>
+    <!-- 遮罩层 -->
+    <div class="mask" ref="mask"></div>
   </div>
 </template>
 
@@ -13,13 +14,41 @@
 export default {
   name: "Zoom",
   props: ["skuImageList"],
+  data() {
+    return {
+      currentIndex: 0
+    };
+  },
+  methods: {
+    handler(event) {
+      let mask = this.$refs.mask;
+      let big=this.$refs.big;
+      let rect = event.target.getBoundingClientRect();
+      let left = event.clientX - rect.left - mask.offsetWidth / 2;
+      let top = event.clientY - rect.top - mask.offsetHeight / 2;
+
+      // 修改元素属性值
+      if (left <= 0) left = 0;
+      if (left >= rect.width - mask.offsetWidth) left = rect.width - mask.offsetWidth;
+      if (top <= 0) top = 0;
+      if (top >= rect.height - mask.offsetHeight) top = rect.height - mask.offsetHeight;
+
+      mask.style.left = left + 'px';
+      mask.style.top = top + 'px';
+      big.style.left = -2 * left + 'px';
+      big.style.top = -2 * left + 'px';
+    }
+  },
   computed: {
     imgObj() {
-      return this.skuImageList[0] || {};
+      return this.skuImageList[this.currentIndex] || {};
     }
   },
   mounted() {
-    //console.log(this.skuImageList, '111111111');
+    // 全局事件总线接收兄弟组件图片索引值
+    this.$bus.$on('getIndex', (index) => {
+      this.currentIndex = index;
+    });
   }
 }
 </script>
