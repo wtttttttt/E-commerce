@@ -28,10 +28,14 @@ const actions = {
   },
   async addOrUpdateShopCart({ commit }, { skuId, skuNum }) {
     let result = await reqAddOrUpdateShopCart(skuId, skuNum);
-    //此处服务器没有返回数据,因此不用存储
+    //此处服务器没有返回数据，不需要mutations进行数据存储
+    if (result.code === 200) {
+      return "ok";
+    } else {
+      return Promise.reject(new Error("fail"));
+    }
   }
 };
-
 const getters = {
   //路径导航简化--面包屑
   categoryView(state) {

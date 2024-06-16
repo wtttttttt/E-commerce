@@ -362,11 +362,12 @@ export default {
       else this.skuNum = parseInt(value);
     },
     //加入购物车的回调
-    addShopCart() {
+    async addShopCart() {
       //派发action--给服务器发请求
       //params参数是从search跳转时带来的
-      this.$store.dispatch('addOrUpdateShopCart', { skuId: this.$route.params.skuId, skuNum: this.skuNum });
+     let result=await this.$store.dispatch('addOrUpdateShopCart', { skuId: this.$route.params.skuId, skuNum: this.skuNum });
       //--成功进行路由跳转
+      console.log(result);
       //失败进行提示
         
     }
