@@ -195,3 +195,28 @@ return this.skuInfo.skuImageList || [];
 会话存储：非持久化：会话关闭会消失
 
 33.发请求的时候购物车不知道你的身份，因此需要 uudi
+
+34.购物车：
+调整 css 让各个项目对齐，删除第三项，其余宽度为 15 25 10 17 10 13
+
+购物车页面中数量变化要向服务器发请求，传递的参数有 skuId、skuNum
+
+修改购物车中的勾选状态：
+//删除全部选中的商品
+deleteAllCheckedCart({ dispatch, getters }) {
+//在此处多次调用 deleteCartListBySkuId
+getters.cartList.cartInfoList.forEach((item) => {
+let promiseAll = [];
+let promise =
+item.isChecked == 1
+? dispatch("deleteCartListBySkuId", item.skuId)
+: " ";
+promiseAll.push(promise);
+});
+//只要 promiseAll 中的每个都成功，即返回成功
+return Promisse.all(promiseAll);
+},
+};
+这里还可以转发 action
+
+35.全选操作：

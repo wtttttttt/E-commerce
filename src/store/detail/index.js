@@ -1,10 +1,10 @@
 import { reqGoodsInfo } from "@/api";
-
+import { getUUID } from "@/utils/uuid_token";
 import { getPositioningCSS } from "nprogress";
 import { reqAddOrUpdateShopCart } from "@/api";
 const state = {
-  //游客临时身份
-  uuid_token: "",
+  //游客临时身份,随机生成一个字符串，之后不可再变
+  uuid_token: getUUID(),
   goodInfo: {},
 };
 const mutations = {
@@ -29,12 +29,17 @@ const actions = {
     }
   },
   async addOrUpdateShopCart({ commit }, { skuId, skuNum }) {
-    let result = await reqAddOrUpdateShopCart(skuId, skuNum);
-    //console.log(typeof result);//object
-    //此处服务器没有返回数据，不需要mutations进行数据存储
-    if (result.code === 200) {
-      return "ok"; //返回成功的标记，“ok”会被包装成promise对象，Promise { 'ok' }
-    } else {
+    try {
+      let result = await reqAddOrUpdateShopCart(skuId, skuNum);
+      //console.log(result, 1111111);
+      //console.log(typeof result, 2222222222); //object
+      //此处服务器没有返回数据，不需要mutations进行数据存储
+      if (result.code === 200) {
+        return "ok"; //返回成功的标记，“ok”会被包装成promise对象，Promise { 'ok' }
+      } else {
+        return Promise.reject(new Error("fail"));
+      }
+    } catch (error) {
       return Promise.reject(new Error("fail"));
     }
   },
