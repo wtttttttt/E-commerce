@@ -35,4 +35,9 @@ export const reqGoodsInfo = (skuId) =>
   request({ url: `/item/${skuId}`, method: "get" });
 
 //添加购物车  post
-export const reqAddOrUpdateShopCart = (skuId, skuNum) => request({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: "post" });
+export const reqAddOrUpdateShopCart = (skuId, skuNum) =>
+  request({ url: `/cart/addToCart/${skuId}/${skuNum}`, method: "post" });
+
+//获取购物车数据的接口 ：/api/cart/cartList  get
+export const reqCarList = () =>
+  request({ url: "/cart/cartList", method: "get" });

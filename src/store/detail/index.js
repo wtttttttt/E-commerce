@@ -3,6 +3,8 @@ import { reqGoodsInfo } from "@/api";
 import { getPositioningCSS } from "nprogress";
 import { reqAddOrUpdateShopCart } from "@/api";
 const state = {
+  //游客临时身份
+  uuid_token: "",
   goodInfo: {},
 };
 const mutations = {
@@ -28,13 +30,14 @@ const actions = {
   },
   async addOrUpdateShopCart({ commit }, { skuId, skuNum }) {
     let result = await reqAddOrUpdateShopCart(skuId, skuNum);
+    //console.log(typeof result);//object
     //此处服务器没有返回数据，不需要mutations进行数据存储
     if (result.code === 200) {
-      return "ok";
+      return "ok"; //返回成功的标记，“ok”会被包装成promise对象，Promise { 'ok' }
     } else {
       return Promise.reject(new Error("fail"));
     }
-  }
+  },
 };
 const getters = {
   //路径导航简化--面包屑

@@ -66,7 +66,8 @@
               <dl v-for="(spuSaleAttr) in spuSaleAttrList" :key="spuSaleAttr.id">
                 <dt class="title">{{ spuSaleAttr.saleAttrName }}</dt>
                 <dd changepirce="0" :class="{ active: spuSaleAttrValue.isChecked == 1 }"
-                  v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id" @click="changeActive(spuSaleAttrValue,spuSaleAttr.spuSaleAttrValueList)">{{
+                  v-for="(spuSaleAttrValue) in spuSaleAttr.spuSaleAttrValueList" :key="spuSaleAttrValue.id"
+                  @click="changeActive(spuSaleAttrValue, spuSaleAttr.spuSaleAttrValueList)">{{
                     spuSaleAttrValue.saleAttrValueName }}</dd>
               </dl>
             </div>
@@ -74,7 +75,7 @@
               <div class="controls">
                 <input autocomplete="off" class="itxt" v-model="skuNum" @change="changeSkuNum">
                 <a href="javascript:" class="plus" @click="skuNum++">+</a>
-                <a href="javascript:" class="mins" @click="skuNum>1?skuNum--:skuNum=1">-</a>
+                <a href="javascript:" class="mins" @click="skuNum > 1 ? skuNum-- : skuNum = 1">-</a>
               </div>
               <div class="add">
                 <!-- 加入购物车路由跳转之前发一次请求,将所加入购物车的产品发给服务器 -->
@@ -344,13 +345,13 @@ export default {
       skuNum: 1,
     }
   },
-  methods:{
+  methods: {
     //传输组的原因是要把其他元素取消高亮
-    changeActive(spuSaleAttrValue,arr){
+    changeActive(spuSaleAttrValue, arr) {
       arr.forEach(item => {
-        item.isChecked=0;
+        item.isChecked = 0;
       });
-      spuSaleAttrValue.isChecked=1;
+      spuSaleAttrValue.isChecked = 1;
     },
     //修改加入购物车的
     changeSkuNum(event) {
@@ -365,11 +366,23 @@ export default {
     async addShopCart() {
       //派发action--给服务器发请求
       //params参数是从search跳转时带来的
-     let result=await this.$store.dispatch('addOrUpdateShopCart', { skuId: this.$route.params.skuId, skuNum: this.skuNum });
-      //--成功进行路由跳转
-      console.log(result);
+      try {
+        //成功
+        await this.$store.dispatch('addOrUpdateShopCart', {
+          skuId: this.$route.params.skuId,
+          skuNum: this.skuNum
+        });
+        //--成功进行路由跳转,参数只传递skuNum，addCartSuccess需要根据skuNum从浏览器存储得到商品信息
+        //浏览器存储不能存对象,因此要转成对象
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        this.$router.push({ name: 'addCartSuccess', query: { skuNum: this.skuNum } });
+      } catch (error) {
+        alert(error.message);
+      }
+
+
       //失败进行提示
-        
+
     }
   },
   mounted() {
