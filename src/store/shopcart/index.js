@@ -20,12 +20,13 @@ const actions = {
     if (result.code == "200") {
       commit("GETCARTLIST", result.data);
     }
-    console.log(result);
+    //console.log(result);
   },
   //删除某个产品
   async deleteCartListBySkuId({ commit }, skuId) {
     let result = await reqdeleteCartById(skuId);
     if (result.code == "200") {
+      console.log("删除成功");
       return "ok";
     } else {
       return Promise.reject(new Error("fail"));
@@ -42,8 +43,8 @@ const actions = {
   //删除全部选中的商品
   deleteAllCheckedCart({ dispatch, getters }) {
     //在此处多次调用deleteCartListBySkuId
+    let promiseAll = [];
     getters.cartList.cartInfoList.forEach((item) => {
-      let promiseAll = [];
       let promise =
         item.isChecked == 1
           ? dispatch("deleteCartListBySkuId", item.skuId)
@@ -55,8 +56,8 @@ const actions = {
   },
   //修改全部产品状态
   updateAllCartIsChecked({ dispatch, state }, isChecked) {
-    console.log(state);
-    console.log(isChecked);
+    //console.log("111111111111111111", state.cartList);
+    //console.log(isChecked);
     let promiseAll = [];
     state.cartList[0].cartInfoList.forEach((item) => {
       let promise = dispatch("updateCheckedById", {
@@ -72,10 +73,6 @@ const actions = {
 const getters = {
   cartList(state) {
     return state.cartList[0] || {};
-  },
-  //购物车商品数据
-  cartInfoList(state) {
-    return state.cartList.cartInfoList;
   },
 };
 //对外暴露小仓库的一个实例

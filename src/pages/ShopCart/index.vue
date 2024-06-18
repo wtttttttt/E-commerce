@@ -107,16 +107,17 @@ export default {
     async deleteCartById(cart) {
       try {
         await this.$store.dispatch("deleteCartListBySkuId", cart.skuId);
+        this.getData();
       } catch (error) {
         alert(error.message);
       }
     },
     //修改产品勾选状态
-    async updateChecked(cart, $event) {
+    async updateChecked(cart, event) {
       //带给服务器的参数ischecked不是布尔值，应该是0|1
       try {
         //修改成功再次请求最新数据
-        let isChecked = event.target.Checked ? "1" : "0";
+        let isChecked = event.target.checked ? "1" : "0";
         await this.$store.dispatch('updateCheckedById', {
           skuId: cart.skuId,
           isChecked,
@@ -131,6 +132,7 @@ export default {
       try {
         await this.$store.dispatch('deleteAllCheckedCart');
         //发请求获取最新列表
+        this.getData();
       } catch (error) {
         alert(error.message);
       }
@@ -146,11 +148,11 @@ export default {
       } catch (error) {
         console.log(error.message);
       }
-
     }
   },
   computed: {
     ...mapGetters(['cartList']),
+    //购物车商品数据
     cartInfoList() {
       return this.cartList.cartInfoList || [];
     },
