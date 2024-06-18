@@ -49,3 +49,19 @@ export const reqdeleteCartById = (skuId) =>
 //将购物车中商品勾选状态发送给后端 api/cart/checkCart/{skuId}/{isChecked} get
 export const reqUpdateCheckedById = (skuId, isChecked) =>
   request({ url: `/cart/checkCart/${skuId}/${isChecked}`, method: "get" });
+
+//获取验证码： /api/user/passport/sendCode  get
+export const reqGetCode = (phone) =>
+  request({ url: `user/passport/sendCode/${phone}`, method: "get" });
+
+//注册  /api/user/passport/register post phone code password
+export const reqUserRegister = (data) =>
+  request({ url: `/user/passport/register`, data, method: "post" });
+
+//登录 /api/user/passport/login  post  phone password
+export const reqUserLogin = (data) =>
+  request({
+    url: "/user/passport/login",
+    method: "post",
+    data,
+  });

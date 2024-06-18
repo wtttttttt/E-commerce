@@ -219,4 +219,19 @@ return Promisse.all(promiseAll);
 };
 这里还可以转发 action
 
-35.全选操作：
+35.全选操作：判断每一项的 isChecked
+isAllChecked() {
+return this.cartInfoList.every(item => item.isChecked == 1);
+}
+
+36.注册登录
+assets 文件夹是所有组件共用的资源
+
+注册：
+表单验证先不做，先做业务逻辑
+获取验证码：接口、vuex，填数据
+注册要发请求，通过数据库存储用户信息，成功之后跳转到登录
+登录：
+登录的前提是要注册
+登录中，不做校验要阻止 form 表单默认行为 prevent
+登录成功后：服务器为了唯一表示用户会返回一个 token【令牌】（一般服务器除了 token 不会返回其他数据，这个全都返回了）

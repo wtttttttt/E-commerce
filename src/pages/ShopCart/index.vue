@@ -141,7 +141,7 @@ export default {
     async updateAllCartChecked(event) {
       try {
         let isChecked = event.target.checked ? "1" : "0";
-        //派发action
+        //派发action,执行到这里会暂停，等this.$store.dispatch返回，如果是一个解决的promise，继续执行getData，否则转到catch
         await this.$store.dispatch("updateAllCartIsChecked", isChecked);
         //成功重新获取数据
         this.getData();
