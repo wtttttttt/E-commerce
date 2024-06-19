@@ -62,6 +62,10 @@ export const reqUserRegister = (data) =>
 export const reqUserLogin = (data) =>
   request({
     url: "/user/passport/login",
-    method: "post",
     data,
+    method: "post",
   });
+
+//获取用户信息 /api/user/passport/auth/getUserInfo  get
+export const reqUserInfo = () =>
+  request({ url: "/user/passport/auth/getUserInfo", method: "get" });

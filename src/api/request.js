@@ -20,9 +20,13 @@ request.interceptors.request.use((config) => {
   //config:配置对象，里面的headers请求头属性很重要
   //进度条开始动
   nprogress.start();
-  //在请求头上添加token(权限校验)
+  //在请求头上添加uuid(权限校验)
   if (store.state.detail.uuid_token) {
     config.headers.userTempId = store.state.detail.uuid_token;
+  }
+  //在请求头上添加token(权限校验)
+  if (store.state.user.token) {
+    config.headers.token = store.state.user.token;
   }
   return config;
 });

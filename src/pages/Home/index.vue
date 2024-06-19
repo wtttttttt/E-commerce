@@ -18,10 +18,10 @@ import Rank from '@/pages/Home/Rank'
 import Like from '@/pages/Home/Like'
 import Floor from '@/pages/Home/Floor'
 import Brand from '@/pages/Home/Brand'
-import {mapState} from 'vuex'
-export default{
-    name:'',
-    components:{
+import { mapState } from 'vuex'
+export default {
+    name: '',
+    components: {
         ListContainer,
         Recommend,
         Rank,
@@ -32,25 +32,22 @@ export default{
     mounted() {
         //通知服务器发请求
         this.$store.dispatch('getFloorList');
-        setTimeout(()=>{
-            //console.log(this.floorList);
-        },5000) 
+        this.$store.dispatch('getUserInfo');
     },
     computed: {
         ...mapState({
-            floorList : state => state.home.floorList,
+            floorList: state => state.home.floorList,
         })
     },
-    data(){
-        return{
-            
+    data() {
+        return {
+
         }
     },
-    methods:{
-        
+    methods: {
+
     },
 
 }
 </script>
-<style>
-</style>
+<style></style>

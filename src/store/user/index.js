@@ -2,15 +2,24 @@
 import { reqGetCode } from "@/api";
 import { reqUserRegister } from "@/api";
 import { reqUserLogin } from "@/api";
+import { reqUserInfo } from "@/api";
 //state:仓库存储数据的地方
 const state = {
   phone: "",
   code: "",
+  token: "",
+  userInfo: {},
 };
 //mutations:修改state的唯一手段
 const mutations = {
   GETCODE(state, code) {
     state.code = code;
+  },
+  USERLOGIN(state, token) {
+    state.token = token;
+  },
+  GETUSERINFO(state, userInfo) {
+    state.userInfo = userInfo;
   },
 };
 //actions:处理action，可以书写自己的业务逻辑，也可以处理异步，这里可以书写业务逻辑但不能修改state
@@ -39,12 +48,21 @@ const actions = {
   //用户登录
   async userLogin({ commit }, user) {
     let result = await reqUserLogin(user);
-    //
-    //console.log(result);
     if (result.code == "200") {
+      console.log("token:", result.data.token);
+      commit("USERLOGIN", result.data.token);
       return "ok";
     } else {
       return Promise.reject(new Error("fail"));
+    }
+  },
+  //获取用户信息
+  async getUserInfo({ commit }) {
+    let result = await reqUserInfo();
+    console.log(result);
+    if (result.code == "200") {
+      commit("GETUSERINFO", result.data);
+      return "ok";
     }
   },
 };
