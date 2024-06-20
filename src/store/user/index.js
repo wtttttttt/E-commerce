@@ -2,12 +2,13 @@
 import { reqGetCode } from "@/api";
 import { reqUserRegister } from "@/api";
 import { reqUserLogin } from "@/api";
-import { reqUserInfo } from "@/api";
+import { reqUserInfo, reqLogout } from "@/api";
+import { getToken, setToken, removeToken } from "@/utils/token.js";
 //state:仓库存储数据的地方
 const state = {
   phone: "",
   code: "",
-  token: "",
+  token: getToken(),
   userInfo: {},
 };
 //mutations:修改state的唯一手段
@@ -21,6 +22,11 @@ const mutations = {
   GETUSERINFO(state, userInfo) {
     state.userInfo = userInfo;
   },
+  USERLOGOUT(state) {
+    state.userInfo = {};
+    state.token = '';
+    removeToken();
+  }
 };
 //actions:处理action，可以书写自己的业务逻辑，也可以处理异步，这里可以书写业务逻辑但不能修改state
 const actions = {
@@ -51,6 +57,7 @@ const actions = {
     if (result.code == "200") {
       console.log("token:", result.data.token);
       commit("USERLOGIN", result.data.token);
+      setToken(result.data.token);
       return "ok";
     } else {
       return Promise.reject(new Error("fail"));
@@ -61,10 +68,23 @@ const actions = {
     let result = await reqUserInfo();
     console.log(result);
     if (result.code == "200") {
+      //setToken("TOKEN", result.data.token);
       commit("GETUSERINFO", result.data);
       return "ok";
     }
   },
+  //退出登录
+  async userLogout({ commit }) {
+    let result = await reqLogout();
+    console.log(result);
+    if (result.code == "200") {
+      //setToken("TOKEN", result.data.token);
+      commit("USERLOGOUT");
+      return "ok";
+    } else {
+      return Promise.reject(new Error("fail"));
+    }
+  }
 };
 //getters:可以理解为计算属性，用于简化仓库数据，让组件获取仓库的数据更加方便
 const getters = {};
