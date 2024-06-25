@@ -63,7 +63,7 @@ const actions = {
       return Promise.reject(new Error("fail"));
     }
   },
-  //获取用户信息
+  //获取用户信息，在请求头中加上了token
   async getUserInfo({ commit }) {
     let result = await reqUserInfo();
     console.log(result);

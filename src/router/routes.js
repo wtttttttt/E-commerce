@@ -6,6 +6,7 @@ import Register from "@/pages/Register";
 import Detail from "@/pages/Detail";
 import AddCartSuccess from "@/pages/AddCartSuccess";
 import ShopCart from "@/pages/ShopCart";
+import Trade from "@/pages/Trade";
 //配置路由信息
 export default [
   {
@@ -56,6 +57,14 @@ export default [
     path: "/shopCart",
     name: "shopCart",
     component: ShopCart,
+    meta: {
+      show: true,
+    },
+  },
+  {
+    path: "/trade",
+    name: "trade",
+    component: Trade,
     meta: {
       show: true,
     },

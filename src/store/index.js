@@ -11,6 +11,8 @@ import register from "./register";
 import detail from "./detail";
 import shopcart from "./shopcart";
 import user from "./user";
+import trade from "./trade";
+
 //state:仓库存储数据的地方
 const state = {};
 //mutations:修改state的唯一手段
@@ -29,5 +31,6 @@ export default new Vuex.Store({
     detail,
     shopcart,
     user,
+    trade
   },
 });
