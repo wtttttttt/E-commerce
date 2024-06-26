@@ -21,8 +21,8 @@ VueRouter.prototype.push = function (location, resolve, reject) {
     originPush.call(
       this,
       location,
-      () => { },
-      () => { }
+      () => {},
+      () => {}
     );
   }
 };
@@ -46,37 +46,34 @@ router.beforeEach(async (to, from, next) => {
   let token = store.state.user.token;
   let name = store.state.user.userInfo.name;
   if (token) {
-    console.log("token1111111111:", token)
+    console.log("token1111111111:", token);
     //用户已经登录了还想去登录页，直接在首页
-    if (to.path == '/login') {
-      next('/');
+    if (to.path == "/login") {
+      next();
       console.log(1111111);
-    }
-    else {
+    } else {
       //登录了,但不去登录，要判断是否有用户信息，如果没有要派发action获取用户信息
       if (name) {
         next();
         console.log(222222);
-      }
-      else {
+      } else {
         //没有用户信息，先获取用户信息
         try {
           //获取用户信息成功
-          await store.dispatch('getUserInfo');
+          await store.dispatch("getUserInfo");
           console.log("@@@@@@@@@@", store.state.user.userInfo.name);
           next();
           console.log(333333);
         } catch (error) {
           //token过期，获取不到用户信息
           //清除token
-          await store.dispatch('userLogout');
-          next('/login');
+          await store.dispatch("userLogout");
+          next("/login");
           console.log(444444);
         }
       }
     }
-  }
-  else {
+  } else {
     //未登录
     next();
     console.log(555555);
