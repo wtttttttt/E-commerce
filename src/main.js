@@ -19,10 +19,21 @@ import store from "@/store";
 import "@/mock/mockServe";
 //引入swiper
 import "swiper/css/swiper.css";
+//引入api中的全部接口
+import * as API from "@/api";
+//引入element-ui
+import { Button, MessageBox } from "element-ui";
+//element-ui Button注册全局组件
+Vue.component(Button.name, Button);
+//element-ui注册全局组件另一种写法挂在原型上
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
+
 new Vue({
   render: (h) => h(App),
   beforeCreate() {
     Vue.prototype.$bus = this;
+    Vue.prototype.$API = API; //组件内使用API无需引入可以直接使用
   },
   //注册路由信息，使组件身上有$route属性
   router,

@@ -84,19 +84,21 @@
       </div>
     </div>
     <div class="sub clearFix">
-      <router-link class="subBtn" to="/pay">提交订单</router-link>
+      <a class="subBtn" to="/pay" @click="submitOrder">提交订单</a>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+//import {reqSubmitOrder} from '@/api' 在main.js中引入了
 export default {
   name: 'Trade',
   data() {
     return {
       //收集买家留言
       msg: '',
+      orderId: ''
     }
   },
   mounted() {
@@ -122,7 +124,24 @@ export default {
       addressInfo.forEach(item => item.isDefault = 0);
       address.isDefault = 1;
     },
-    //
+    //提交订单
+    async submitOrder() {
+      let { tradeNo } = this.orderInfo;
+      let data = {
+        "consignee": this.userDefaultAddress.consignee,
+        "consigneeTel": this.userDefaultAddress.phoneNum,
+        "deliveryAddress": this.userDefaultAddress.fullAddress,
+        "paymentWay": "ONLINE",
+        "orderComment": this.msg,
+        "orderDetailList": this.orderInfo.detailArrayList
+      }
+      console.log(this.$API);
+      let result = await this.$API.reqSubmitOrder(tradeNo, data);
+      //如果成功会返回一个订单号,并路由跳转加路由传参
+      this.orderId = result.data;
+      this.$router.push('/pay?orderId=' + '15200');
+      // console.log(result);
+    }
   }
 }
 </script>
